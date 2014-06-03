@@ -1,3 +1,15 @@
+/*
+Simple File Transfer
+
+Copyright (c) 2014 Dmitry Lagoza
+Use of this source code is governed by a MIT
+license that can be found in the LICENSE file.
+
+WWW: http://lagoza.name/
+Email: dmitry@lagoza.name
+
+*/
+
 package main
 
 import (

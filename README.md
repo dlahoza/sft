@@ -41,3 +41,4 @@ Client:
 		Mode: Source
 		4.37GB 0:00:05 [ 909MB/s] [    <=>                                             ]
 
+Copyright (c) 2014 Dmitry Lagoza
