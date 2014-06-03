@@ -1,7 +1,7 @@
 sft
 ===
 
-#Simple file transfer utility
+## Simple file transfer utility
 
 Fastest file transfer on Linux.
 No encription, simple TCP connection.
@@ -9,9 +9,9 @@ No encription, simple TCP connection.
 10x faster than transfer over SSH link.
 5x faster than NetCat connection.
 
-## Examples
+### Examples
 
-### From client to server
+#### From client to server
 Server:
 
 		$ ./sft --destination file.out
@@ -19,7 +19,7 @@ Client:
 
 		$ ./sft 127.0.0.1 file.in
 
-### From server to client
+#### From server to client
 Server:
 
 		$ ./sft --source file.in
@@ -27,7 +27,7 @@ Client:
 
 		$ ./sft 127.0.0.1 file.out
 
-### With pipes:
+#### With pipes:
 Server:
 
 		$ ./sft --source /dev/zero
