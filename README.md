@@ -9,29 +9,29 @@ No encription, simple TCP connection.
 10x faster than transfer over SSH link.
 5x faster than NetCat connection.
 
-Examples
-==
-From client to server
-Server:
-# ./sft --destination file.out
-Client:
-# ./sft 127.0.0.1 file.in
+## Examples
 
-From server to client
+### From client to server
 Server:
-# ./sft --source file.in
+ ./sft --destination file.out
 Client:
-# ./sft 127.0.0.1 file.out
+ ./sft 127.0.0.1 file.in
 
-With pipes:
+### From server to client
 Server:
-# ./sft --source /dev/zero
+ ./sft --source file.in
 Client:
-# ./sft --verbose 127.0.0.1 - | pv > /dev/null
-Client mode
-Port: 18000
-File: -
-Connecting... ok
-Mode: Source
-4.37GB 0:00:05 [ 909MB/s] [    <=>                                             ]
+ ./sft 127.0.0.1 file.out
+
+### With pipes:
+Server:
+ ./sft --source /dev/zero
+Client:
+ ./sft --verbose 127.0.0.1 - | pv > /dev/null
+ Client mode
+ Port: 18000
+ File: -
+ Connecting... ok
+ Mode: Source
+ 4.37GB 0:00:05 [ 909MB/s] [    <=>                                             ]
 
