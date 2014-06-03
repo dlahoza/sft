@@ -1,4 +1,5 @@
 /*
+
 Simple File Transfer
 
 Copyright (c) 2014 Dmitry Lagoza
@@ -19,7 +20,6 @@ import (
 	"net"
 	"os"
 	"strconv"
-	//	"strings"
 )
 
 var (
