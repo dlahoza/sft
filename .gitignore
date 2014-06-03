@@ -21,3 +21,7 @@ _testmain.go
 
 *.exe
 *.test
+
+sft
+sft.sublime-project
+sft.sublime-workspace
