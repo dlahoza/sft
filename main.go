@@ -65,7 +65,7 @@ func Server() {
 	}
 	if d {
 		if verbose {
-			fmt.Fprintln(os.Stderr, "Server destination mode on port "+strconv.Itoa(port)+"\nI'll recieve file from client and save it to "+filename)
+			fmt.Fprintln(os.Stderr, "Mode: Destination\nPort: "+strconv.Itoa(port)+"\nFile: "+filename)
 		}
 
 		ln, err := net.Listen("tcp", ":"+strconv.Itoa(port))
@@ -105,9 +105,47 @@ func Server() {
 			fmt.Fprintln(os.Stderr, "Recieved "+strconv.Itoa(int(written))+" bytes")
 		}
 	}
+	//Source
 	if s {
 		if verbose {
-			fmt.Fprintln(os.Stderr, "Server source mode on port "+strconv.Itoa(port)+"\nI'll send file "+filename+" to client.")
+			fmt.Fprintln(os.Stderr, "Mode: Source\nPort: "+strconv.Itoa(port)+"\nFile: "+filename)
+		}
+
+		ln, err := net.Listen("tcp", ":"+strconv.Itoa(port))
+		if err != nil {
+			os.Exit(1)
+		}
+		defer ln.Close()
+		if verbose {
+			fmt.Fprint(os.Stderr, "Waiting for connection... ")
+		}
+		conn, err := ln.Accept()
+		if err != nil {
+			os.Exit(1)
+		}
+		defer conn.Close()
+		if verbose {
+			fmt.Fprintln(os.Stderr, "connected from "+conn.RemoteAddr().String())
+		}
+		var f *os.File
+		if filename == "-" {
+			f = os.Stdin
+		} else {
+			f, err = os.Open(filename)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, "Error while file opening:", err)
+				os.Exit(1)
+			}
+		}
+		defer f.Close()
+		fmt.Fprint(conn, "S")
+		written, err := io.Copy(conn, f)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error while Copy:", err)
+			os.Exit(1)
+		}
+		if verbose {
+			fmt.Fprintln(os.Stderr, "Sent "+strconv.Itoa(int(written))+" bytes")
 		}
 	}
 }
@@ -121,12 +159,15 @@ func Client() {
 	if verbose {
 		fmt.Fprintln(os.Stderr, "Client mode")
 	}
+	fmt.Fprintln(os.Stderr, "Port: "+strconv.Itoa(port)+"\nFile: "+filename)
+	fmt.Fprint(os.Stderr, "Connecting... ")
 	conn, err := net.Dial("tcp", hostname+":"+strconv.Itoa(port))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error while file connecting:", err)
 		os.Exit(1)
 	}
 	defer conn.Close()
+	fmt.Fprintln(os.Stderr, "ok")
 	mode := make([]byte, 1)
 	conn.Read(mode)
 	switch mode[0] {
@@ -145,7 +186,22 @@ func Client() {
 			}
 		}
 		defer f.Close()
+		fmt.Fprintln(os.Stderr, "Mode: Destination")
 		io.Copy(conn, f)
+	case 'S':
+		var f *os.File
+		if filename == "-" {
+			f = os.Stdout
+		} else {
+			f, err = os.Create(filename)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, "Error while file creation:", err)
+				os.Exit(1)
+			}
+		}
+		defer f.Close()
+		fmt.Fprintln(os.Stderr, "Mode: Source")
+		io.Copy(f, conn)
 	}
 }
 
